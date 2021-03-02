@@ -35,7 +35,7 @@ namespace Plugin.AudioRecorder
 		/// <summary>
 		/// The default device.
 		/// </summary>
-		public static readonly AudioSource DefaultDevice = AudioSource.Mic;
+		public static readonly AudioSource DefaultDevice = AudioSource.Camcorder;
 
 		/// <summary>
 		/// Gets the sample rate.
