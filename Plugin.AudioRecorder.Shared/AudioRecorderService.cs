@@ -77,6 +77,12 @@ namespace Plugin.AudioRecorder
 		public float SilenceThreshold { get; set; } = .15f;
 
 		/// <summary>
+		/// Gets/sets the recording volume.
+		/// 1.0 is full scale, 0.0 is silence, anything over 1.0 will amplify but potentially clip.
+		/// </summary>
+		public float RecordingVolume { get; set; } = 1.0f;
+
+		/// <summary>
 		/// This event is raised when audio recording is complete and delivers a full filepath to the recorded audio file.
 		/// </summary>
 		/// <remarks>This event will be raised on a background thread to allow for any further processing needed.  The audio file will be <c>null</c> in the case that no audio was recorded.</remarks>
@@ -107,7 +113,7 @@ namespace Plugin.AudioRecorder
 			ResetAudioDetection ();
 			OnRecordingStarting ();
 
-			InitializeStream (PreferredSampleRate);
+			InitializeStream (PreferredSampleRate, RecordingVolume);
 
 			await recorder.StartRecorder (audioStream, FilePath);
 
@@ -230,7 +236,7 @@ namespace Plugin.AudioRecorder
 			}
 		}
 
-		void InitializeStream (int sampleRate)
+		void InitializeStream (int sampleRate, float recordingVolume)
 		{
 			try
 			{
@@ -240,7 +246,7 @@ namespace Plugin.AudioRecorder
 				}
 				else
 				{
-					audioStream = new AudioStream (sampleRate);
+					audioStream = new AudioStream (sampleRate, recordingVolume);
 				}
 
 				audioStream.OnBroadcast += AudioStream_OnBroadcast;

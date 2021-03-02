@@ -84,6 +84,7 @@ namespace Plugin.AudioRecorder
 			{
 				if (writer != null && streamWriter != null)
 				{
+					AudioFunctions.AdjustRecordingVolume(bytes, 0, audioStream.RecordingVolume);
 					writer.Write (bytes);
 					byteCount += bytes.Length;
 				}

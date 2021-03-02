@@ -68,6 +68,11 @@ namespace Plugin.AudioRecorder
 		/// </summary>
 		public bool Active => audioSource?.RecordingState == RecordState.Recording;
 
+		/// <summary>
+		/// Gets the recording volume.
+		/// </summary>
+		public float RecordingVolume { get; private set; }
+
 		void Init ()
 		{
 			Stop (); // just in case
@@ -143,7 +148,7 @@ namespace Plugin.AudioRecorder
 		/// <param name="sampleRate">Sample rate.</param>
 		/// <param name="channels">The <see cref="ChannelIn"/> value representing the number of channels to record.</param>
 		/// <param name="audioFormat">The format of the recorded audio.</param>
-		public AudioStream (int sampleRate = 44100, ChannelIn channels = ChannelIn.Mono, Encoding audioFormat = Encoding.Pcm16bit)
+		public AudioStream (int sampleRate = 44100, float recordingVolume = 1.0f, ChannelIn channels = ChannelIn.Mono, Encoding audioFormat = Encoding.Pcm16bit)
 		{
 			bufferSize = AudioRecord.GetMinBufferSize (sampleRate, channels, audioFormat);
 
@@ -153,6 +158,7 @@ namespace Plugin.AudioRecorder
 			}
 
 			SampleRate = sampleRate;
+			RecordingVolume = recordingVolume;
 			this.channels = channels;
 			this.audioFormat = audioFormat;
 		}

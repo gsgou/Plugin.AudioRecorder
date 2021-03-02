@@ -60,6 +60,11 @@ namespace Plugin.AudioRecorder
 		public bool Active => audioQueue?.IsRunning ?? false;
 
 		/// <summary>
+		/// Gets the recording volume.
+		/// </summary>
+		public float RecordingVolume { get; private set; }
+
+		/// <summary>
 		/// Wrapper function to run success/failure callbacks from an operation that returns an AudioQueueStatus.
 		/// </summary>
 		/// <param name="bufferFn">The function that returns AudioQueueStatus.</param>
@@ -140,9 +145,10 @@ namespace Plugin.AudioRecorder
 		/// Initializes a new instance of the <see cref="AudioStream"/> class.
 		/// </summary>
 		/// <param name="sampleRate">Sample rate.</param>
-		public AudioStream (int sampleRate)
+		public AudioStream (int sampleRate, float recordingVolume)
 		{
 			SampleRate = sampleRate;
+			RecordingVolume = recordingVolume;
 		}
 
 		void InitAudioQueue ()

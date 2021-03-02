@@ -58,13 +58,19 @@ namespace Plugin.AudioRecorder
 		public bool Active { get; private set; }
 
 		/// <summary>
+		/// Gets the recording volume.
+		/// </summary>
+		public float RecordingVolume { get; private set; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="AudioStream"/> class.
 		/// </summary>
 		/// <param name="sampleRate">Sample rate.</param>
 		/// <param name="channels">A value representing the number of channels to record.</param>
-		public AudioStream (int sampleRate, int channels = 1)
+		public AudioStream (int sampleRate, float recordingVolume, int channels = 1)
 		{
 			SampleRate = sampleRate;
+			RecordingVolume = recordingVolume;
 			ChannelCount = channels;
 		}
 

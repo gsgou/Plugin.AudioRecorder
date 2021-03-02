@@ -14,11 +14,13 @@ namespace Plugin.AudioRecorder
 
 		public bool Active => throw new NotImplementedException ();
 
+		public float RecordingVolume => throw new NotImplementedException();
+
 		public event EventHandler<byte []> OnBroadcast;
 		public event EventHandler<bool> OnActiveChanged;
 		public event EventHandler<Exception> OnException;
 
-		public AudioStream (int sampleRate)
+		public AudioStream (int sampleRate, float recordingVolume)
 		{
 		}
 

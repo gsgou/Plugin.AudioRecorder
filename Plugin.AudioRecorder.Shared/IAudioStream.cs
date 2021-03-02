@@ -47,6 +47,11 @@ namespace Plugin.AudioRecorder
 		bool Active { get; }
 
 		/// <summary>
+		/// Gets the recording volume.
+		/// </summary>
+		float RecordingVolume { get; }
+
+		/// <summary>
 		/// Starts the audio stream.
 		/// </summary>
 		Task Start ();

@@ -143,6 +143,54 @@ namespace Plugin.AudioRecorder
 		}
 
 		/// <summary>
+		/// Adjust recording volume
+		/// </summary>
+		/// <param name="buffer">Buffer to read into</param>
+		/// <param name="offset">Offset within buffer to read to</param>
+		/// <param name="volume">Volume desired to record</param>
+		/// Adapted from https://github.com/naudio/NAudio/blob/master/NAudio.Core/Wave/WaveProviders/VolumeWaveProvider16.cs
+		internal static void AdjustRecordingVolume(byte[] buffer, int offset, float volume)
+		{
+			if (volume == 1.0f)
+			{
+				return;
+			}
+
+			int bytesRead = buffer.Length;
+			if (volume == 0.0f)
+			{
+				for (int n = 0; n < bytesRead; n++)
+				{
+					buffer[offset++] = 0;
+				}
+			}
+			else
+			{
+				for (int n = 0; n < bytesRead; n += 2)
+				{
+					short sample = (short)((buffer[offset + 1] << 8) | buffer[offset]);
+					var newSample = sample * volume;
+					sample = (short)newSample;
+					// clip if necessary
+					if (volume > 1.0f)
+					{
+						if (newSample > short.MaxValue)
+						{
+							sample = short.MaxValue;
+						}
+						else if (newSample < short.MinValue)
+						{
+							sample = short.MinValue;
+						}
+					}
+
+					buffer[offset++] = (byte)(sample & 0xFF);
+					buffer[offset++] = (byte)(sample >> 8);
+				}
+			}
+		}
+
+		/// <summary>
 		/// The bytes that we get from audiograph is in IEEE float, we need to covert that to 16 bit
 		/// </summary>
 		/// <param name="value"></param>
