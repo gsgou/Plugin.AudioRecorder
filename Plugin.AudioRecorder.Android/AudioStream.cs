@@ -1,4 +1,5 @@
 using Android.Media;
+using Android.Media.Audiofx;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -83,6 +84,10 @@ namespace Plugin.AudioRecorder
 				channels,
 				audioFormat,
 				bufferSize);
+
+			// on some devices, an AGC can be inserted by default in the capture path by the platform.
+			bool isNoAGC = EnsureAGCIsDisabled ();
+			Debug.WriteLine ($"Is AGC disabled: {isNoAGC}");
 
 			if (audioSource.State == State.Uninitialized)
 			{
@@ -219,6 +224,34 @@ namespace Plugin.AudioRecorder
 					Debug.WriteLine ("Error in Android AudioStream.Record(): {0}", ex.Message);
 
 					OnException?.Invoke (this, ex);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Ensures Automatic Gain Control is off.
+		/// </summary>
+		/// <value>
+		/// true if AGC is guaranteed to be off; false otherwise.
+		/// </value>
+		bool EnsureAGCIsDisabled ()
+		{
+			int audioSessionId = audioSource.AudioSessionId;
+			using (var agc = AutomaticGainControl.Create(audioSessionId))
+			{
+				if (agc == null)
+				{
+					// the device does not implement automatic gain control.
+					return true;
+				}
+				if (agc.Enabled)
+				{
+					var result = agc.SetEnabled(false);
+					return result == AudioEffectStatus.Success;
+				}
+				else
+				{
+					return true;
 				}
 			}
 		}
